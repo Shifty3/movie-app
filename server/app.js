@@ -45,7 +45,6 @@ app.get("/movies", (req, res) => {
       }
 
       console.log("Fetched recommendations:", recommendedMovies);
-
       res.send({
         title: movieData.title,
         recommendations: recommendedMovies,

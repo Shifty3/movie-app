@@ -1,9 +1,10 @@
-const request = require("postman-request");
+const axios = require("axios");
 
-const recommend = (id, callback) => {
-  const url = `https://api.themoviedb.org/3/movie/${id}/recommendations?language=en-US&page=1`;
+const recommend = (id) => {
   const options = {
     method: "GET",
+    url: "https://api.themoviedb.org/3/movie/" + id + "/recommendations",
+    params: { language: "en-US", page: "1" },
     headers: {
       accept: "application/json",
       Authorization:
@@ -11,19 +12,19 @@ const recommend = (id, callback) => {
     },
   };
 
-  request({ url: url, json: true }, (error, response) => {
-    if (error) {
-      callback("Unable to connect to server", undefined);
-    } else if (response.body.error) {
-      callback("Unable to find movie", undefined);
-    } else {
-      const recommendedMovies = response.body.results.map(
-        (movie) => movie.title
-      );
+  axios
+    .request(options)
+    .then((res) => {
+      let arr = [];
+      res.data.results.forEach((element) => {
+        arr.push(element.title);
+        console.log(element.title);
+      });
+    })
 
-      callback(undefined, `${recommendedMovies}`);
-    }
-  });
+    .catch((err) => console.error(err));
 };
+
+recommend(268);
 
 module.exports = recommend;

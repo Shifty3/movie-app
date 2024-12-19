@@ -25,11 +25,13 @@ form.addEventListener("submit", (e) => {
 
           // Create a new element for each movie title
           const movieElement = document.createElement("p");
-          movieElement.textContent = result.title;
+          movieElement.textContent = result[0].title;
 
           // Optionally, display the movie's release date
           const releaseDateElement = document.createElement("small");
-          releaseDateElement.textContent = `(${result.release_date || "N/A"})`;
+          releaseDateElement.textContent = `(${
+            result[0].release_date || "N/A"
+          })`;
 
           // Append elements to the container
           movieContainer.appendChild(movieElement);

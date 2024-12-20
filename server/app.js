@@ -3,6 +3,8 @@ const express = require("express");
 const hbs = require("hbs");
 const movie = require("./utils/movie");
 const recommend = require("./utils/recommend");
+const port = process.env.PORT || 3000;
+
 // const movie = require("movie");
 
 const app = express();
@@ -43,6 +45,6 @@ app.get("/movies", async (req, res) => {
     res.send({ error: "Failed to fetch movie data" });
   }
 });
-app.listen(3001, () => {
+app.listen(port, () => {
   console.log("server up!");
 });

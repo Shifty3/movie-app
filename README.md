@@ -6,6 +6,8 @@ Search for movies by name.
 
 Display a list of matching movies with details such as title, release date, and a brief overview.
 
+Scroll effect when the description overflows the container.
+
 Built with Express.js for the backend, Handlebars for templating, and Fetch API for handling requests in the frontend.
 
 Uses TMDb API to fetch movie information.

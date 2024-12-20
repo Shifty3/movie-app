@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "public/index.html",
-      "use": "@vercel/static"
+      "src": "web-server/src/app.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/public/$1"
+      "dest": "/web-server/src/app.js"
     }
   ]
 }

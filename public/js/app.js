@@ -2,50 +2,52 @@ const input = document.querySelector("input");
 const form = document.querySelector("form");
 const output = document.querySelector(".output");
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const movie = input.value;
+form
+  .addEventListener("submit", (e) => {
+    e.preventDefault();
+    const movie = input.value;
 
-  output.textContent = "Loading...";
-  output.style.display = "block";
+    fetch(`/movies?&query=${encodeURIComponent(movie)}&language=en-US&page=1`)
+      .then((response) => response.json()) // Convert the response to JSON
+      .then((data) => {
+        console.log("inb movies we gots ", data);
 
-  // Fetch movie data from the backend (same origin)
-  fetch(`/movies?query=${encodeURIComponent(movie)}&language=en-US&page=1`)
-    .then((response) => response.json()) // Convert the response to JSON
-    .then((data) => {
-      if (data.error) {
-        output.textContent = data.error; // Show error message if data contains error
-      } else if (data.results && data.results.length > 0) {
-        output.innerHTML = ""; // Clear previous results
-        output.style.display = "block";
+        output.innerHTML = "";
 
-        // Loop through all results and display them
-        data.results.forEach((result) => {
-          const movieContainer = document.createElement("div");
+        // Check if there are results
+        if (data.results && data.results.length > 0) {
+          // Loop through the results and create an element for each movie
+          data.results.forEach((movieData) => {
+            const movieDiv = document.createElement("div");
+            movieDiv.classList.add("movie-item");
 
-          // Create a new element for each movie title
-          const movieElement = document.createElement("p");
-          movieElement.textContent = result[0].title;
+            const movieName = document.createElement("h3");
+            movieName.classList.add("movie-name");
+            movieName.textContent = movieData.title;
 
-          // Optionally, display the movie's release date
-          const releaseDateElement = document.createElement("small");
-          releaseDateElement.textContent = `(${
-            result[0].release_date || "N/A"
-          })`;
+            const movieReleaseDate = document.createElement("p");
+            movieReleaseDate.classList.add("movie-release-date");
+            movieReleaseDate.textContent = `Release Date: ${movieData.release_date}`;
 
-          // Append elements to the container
-          movieContainer.appendChild(movieElement);
-          movieContainer.appendChild(releaseDateElement);
+            const movieOverview = document.createElement("p");
+            movieOverview.classList.add("movie-overview");
+            movieOverview.textContent = movieData.overview;
 
-          // Append the container to the output div
-          output.appendChild(movieContainer);
-        });
-      } else {
-        output.textContent = "No results found."; // If no results, show this message
-      }
-    })
-    .catch((error) => {
-      output.textContent = "Error fetching data."; // In case of any error
-      console.error(error);
-    });
-});
+            // Append the movie details to the movieDiv
+            movieDiv.appendChild(movieName);
+            movieDiv.appendChild(movieReleaseDate);
+            movieDiv.appendChild(movieOverview);
+
+            // Append the movieDiv to the output container
+            output.appendChild(movieDiv);
+          });
+        } else {
+          // Handle no results found
+          output.innerHTML = "<p>No movies found matching your search.</p>";
+        }
+      });
+  })
+  .catch((error) => {
+    output.textContent = "Error fetching data."; // In case of any error
+    console.error(error);
+  });
